@@ -1,0 +1,20 @@
+services:
+  PrestaShop\Module\Ovesio\Controller\Admin\ConfigureController:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\Module\Ovesio\Controller\Admin\ManualController:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\Module\Ovesio\Controller\Admin\ActivityListController:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\Module\Ovesio\Controller\Front\CallbackController:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\Module\Ovesio\Controller\Front\CronController:
+    autowire: true
+    autoconfigure: true

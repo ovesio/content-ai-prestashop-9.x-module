@@ -1,0 +1,23 @@
+{
+  "name": "ovesio/ovesio",
+  "description": "Ovesio AI Module for PrestaShop 9",
+  "type": "prestashop-module",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Aweb Design SRL"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "PrestaShop\\Module\\Ovesio\\": "./src"
+    }
+  },
+  "config": {
+    "preferred-install": "dist",
+    "optimize-autoloader": true
+  },
+  "require": {
+    "php": ">=7.2.5"
+  }
+}

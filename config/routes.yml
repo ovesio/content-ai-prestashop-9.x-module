@@ -1,0 +1,104 @@
+admin_ovesio_configure:
+    path: /ovesio
+    methods: [GET, POST]
+    defaults:
+        _controller: PrestaShop\Module\Ovesio\Controller\Admin\ConfigureController::index
+        _legacy_controller: AdminOvesioConfigure
+        _legacy_link: AdminOvesioConfigure
+
+admin_ovesio_manual:
+    path: /ovesio/manual
+    methods: [GET, POST]
+    defaults:
+        _controller: PrestaShop\Module\Ovesio\Controller\Admin\ManualController::index
+        _legacy_controller: AdminOvesioManual
+        _legacy_link: AdminOvesioManual
+
+admin_ovesio_connect:
+    path: /ovesio/connect
+    methods: [POST]
+    defaults:
+        _controller: PrestaShop\Module\Ovesio\Controller\Admin\ConfigureController::connect
+
+admin_ovesio_disconnect:
+    path: /ovesio/disconnect
+    methods: [POST]
+    defaults:
+        _controller: PrestaShop\Module\Ovesio\Controller\Admin\ConfigureController::disconnect
+
+admin_ovesio_generate_content_card:
+    path: /ovesio/generate-content/card
+    methods: [GET]
+    defaults:
+        _controller: PrestaShop\Module\Ovesio\Controller\Admin\ConfigureController::generateContentCard
+
+admin_ovesio_generate_seo_card:
+    path: /ovesio/generate-seo/card
+    methods: [GET]
+    defaults:
+        _controller: PrestaShop\Module\Ovesio\Controller\Admin\ConfigureController::generateSeoCard
+
+
+admin_ovesio_translate_card:
+    path: /ovesio/translate/card
+    methods: [GET]
+    defaults:
+        _controller: PrestaShop\Module\Ovesio\Controller\Admin\ConfigureController::translateCard
+
+
+admin_ovesio_generate_content_form:
+    path: /ovesio/generate-content/form
+    methods: [GET]
+    defaults:
+        _controller: PrestaShop\Module\Ovesio\Controller\Admin\ConfigureController::generateContentForm
+
+admin_ovesio_generate_seo_form:
+    path: /ovesio/generate-seo/form
+    methods: [GET]
+    defaults:
+        _controller: PrestaShop\Module\Ovesio\Controller\Admin\ConfigureController::generateSeoForm
+
+admin_ovesio_translate_form:
+    path: /ovesio/translate/form
+    methods: [GET]
+    defaults:
+        _controller: PrestaShop\Module\Ovesio\Controller\Admin\ConfigureController::translateForm
+
+admin_ovesio_generate_content_save:
+    path: /ovesio/generate-content/save
+    methods: [POST]
+    defaults:
+        _controller: PrestaShop\Module\Ovesio\Controller\Admin\ConfigureController::generateContentFormSave
+
+
+admin_ovesio_generate_seo_save:
+    path: /ovesio/generate-seo/save
+    methods: [POST]
+    defaults:
+        _controller: PrestaShop\Module\Ovesio\Controller\Admin\ConfigureController::generateSeoFormSave
+
+admin_ovesio_translate_save:
+    path: /ovesio/translate/save
+    methods: [POST]
+    defaults:
+        _controller: PrestaShop\Module\Ovesio\Controller\Admin\ConfigureController::translateFormSave
+
+admin_ovesio_activity_list:
+    path: /ovesio/activity-list
+    methods: [GET]
+    defaults:
+        _controller: PrestaShop\Module\Ovesio\Controller\Admin\ActivityListController::index
+        _legacy_controller: AdminOvesioActivityList
+        _legacy_link: AdminOvesioActivityList
+
+admin_ovesio_activity_view_request:
+    path: /ovesio/activity/view-request
+    methods: [GET]
+    defaults:
+        _controller: PrestaShop\Module\Ovesio\Controller\Admin\ActivityListController::viewRequest
+
+admin_ovesio_activity_view_response:
+    path: /ovesio/activity/view-response
+    methods: [GET]
+    defaults:
+        _controller: PrestaShop\Module\Ovesio\Controller\Admin\ActivityListController::viewResponse
