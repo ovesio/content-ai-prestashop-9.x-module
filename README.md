@@ -226,16 +226,33 @@ ovesio/
 └── views/                    # Templates and assets
 ```
 
+## Version
+
+Current version: 1.1.0
+
 ## Support
 
 This module is developed and maintained by Aweb Design SRL for Ovesio.com. For documentation and API references, visit [https://ovesio.com/docs](https://ovesio.com/docs).
 
 For technical support or bug reports, please contact Ovesio support.
 
-## Version
-
-Current version: 1.1.0
-
 ## Author
 
 Aweb Design SRL
+
+## License
+
+MIT License. See LICENSE file for details.
+
+## Disclaimer
+
+This module is provided "AS IS", without warranty of any kind, express or implied.
+The authors and contributors are not liable for any claim, damages, or other liability,
+whether in an action of contract, tort, or otherwise, arising from, out of, or in connection
+with the module or the use or other dealings in the module.
+
+This is an open-source community module and is not an official module of PrestaShop
+
+This module may rely on third-party services/APIs. Availability and output quality may vary.
+
+Use this module at your own risk. Always test in a staging environment before deploying to production.
