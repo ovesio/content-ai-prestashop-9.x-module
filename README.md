@@ -1,4 +1,4 @@
-# Ovesio AI Module for PrestaShop
+# Ovesio - Content AI Module for PrestaShop 9.x
 
 ## License and Disclaimer
 
@@ -6,7 +6,7 @@ This package is released under the MIT License. We are not responsible for any m
 
 ## Overview
 
-The Ovesio AI Module integrates PrestaShop with [Ovesio.com](https://ovesio.com/), enabling AI-powered translations and automatic content generation (descriptions and SEO meta tags) for your e-commerce store.
+The Ovesio - Content AI Module integrates PrestaShop with [Ovesio.com](https://ovesio.com/), enabling AI-powered translations and automatic content generation (descriptions and SEO meta tags) for your e-commerce store.
 
 ## Key Features
 
@@ -83,7 +83,7 @@ From the AI Description Generator section:
 
 ### Step 1: Upload and Install the Module
 
-1.  **Download:** Download the zip archive called `ovesio.zip` from the [GitHub repository](https://github.com/ovesio/ovesio-translate-prestashop-9.x/releases) releases section.
+1.  **Download** the latest zip archive called `ovesio.zip` from the [Releases](https://github.com/ovesio/content-ai-prestashop-9.x-module/releases) section.
 2.  **Upload:**
     *   Log in to your PrestaShop Admin Panel (Back Office).
     *   Navigate to **Improve** > **Modules** > **Module Manager**.
