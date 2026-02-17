@@ -431,9 +431,11 @@ class OvesioQueueModel
         $language_settings = (array) $this->config->get($this->module_key . '_language_settings');
 
         $translate_languages = [];
-        foreach ($language_settings as $lang_id => $ls) {
-            if (!empty($ls['translate']) && !empty($ls['code'])) {
-                $translate_languages[] = $ls['code'];
+        if(!empty($language_settings)) {
+            foreach ($language_settings as $lang_id => $ls) {
+                if (!empty($ls['translate']) && !empty($ls['code'])) {
+                    $translate_languages[] = $ls['code'];
+                }
             }
         }
 
