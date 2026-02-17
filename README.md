@@ -1,9 +1,5 @@
 # Ovesio - Content AI Module for PrestaShop 9.x
 
-## License and Disclaimer
-
-This package is released under the MIT License. We are not responsible for any malfunction or improper behavior caused by the use of this package. This package is provided as an example integration. For production-ready integrations, we highly recommend using our official API endpoints and documentation, available at [https://ovesio.com/docs](https://ovesio.com/docs).
-
 ## Overview
 
 The Ovesio - Content AI Module integrates PrestaShop with [Ovesio.com](https://ovesio.com/), enabling AI-powered translations and automatic content generation (descriptions and SEO meta tags) for your e-commerce store.
@@ -228,11 +224,11 @@ ovesio/
 
 ## Version
 
-Current version: 1.1.0
+Current version: 1.2
 
 ## Support
 
-This module is developed and maintained by Aweb Design SRL for Ovesio.com. For documentation and API references, visit [https://ovesio.com/docs](https://ovesio.com/docs).
+This module is developed and maintained by Aweb Design SRL for Ovesio.com. For documentation and API references, visit [https://docs.ovesio.com](https://docs.ovesio.com).
 
 For technical support or bug reports, please contact Ovesio support.
 
