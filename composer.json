@@ -1,8 +1,8 @@
 {
   "name": "ovesio/ovesio",
-  "description": "Ovesio AI Module for PrestaShop 9",
+  "description": "Ovesio - Content AI Module for PrestaShop 9",
   "type": "prestashop-module",
-  "license": "proprietary",
+  "license": "MIT",
   "authors": [
     {
       "name": "Aweb Design SRL"

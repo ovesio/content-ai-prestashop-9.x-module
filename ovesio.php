@@ -29,7 +29,7 @@ class Ovesio extends Module
 
         parent::__construct();
 
-        $this->displayName = $this->l('Ovesio AI');
+        $this->displayName = $this->l('Ovesio - Content AI');
         $this->description = $this->l('AI Content Generation for PrestaShop');
 
         // Load language strings
@@ -38,7 +38,7 @@ class Ovesio extends Module
         // Define tabs
         $tabNames = [];
         foreach (Language::getLanguages(true) as $lang) {
-            $tabNames[$lang['locale']] = $this->l('Ovesio AI');
+            $tabNames[$lang['locale']] = $this->l('Ovesio - Content AI');
         }
 
         $this->tabs = [
@@ -262,14 +262,11 @@ class Ovesio extends Module
      * Hook to add custom buttons in the admin toolbar
      * This hook is called in the toolbar area on various admin pages
      */
-    /**
-     * Get toolbar buttons configuration
-     */
-    private function getToolbarButtons()
+    public function hookDisplayDashboardToolbarTopMenu($params)
     {
         $action = Tools::getValue('action');
         if ($action && stripos($action, 'view') === false) {
-            return [];
+            return;
         }
 
         $ovesio_status                  = \Configuration::get('OVESIO_STATUS');
@@ -284,87 +281,42 @@ class Ovesio extends Module
             'AdminFeatures'         => 'features',
         ];
 
-        $controller_name = \Context::getContext()->controller->controller_name;
-
-        if (!isset($ovesio_route_resource[$controller_name])) {
-            return [];
-        }
-
-        $resource = $ovesio_route_resource[$controller_name];
-
-        $ovesio_generate_content_status = $ovesio_status && $ovesio_generate_content_status && in_array($resource, ['products', 'categories']);
-        $ovesio_generate_seo_status     = $ovesio_status && $ovesio_generate_seo_status && in_array($resource, ['products', 'categories']);
-        $ovesio_translate_status        = $ovesio_status && $ovesio_translate_status;
-
-        $ovesio_manual_url = $this->context->link->getAdminLink(ManualController::TAB_CLASS_NAME) . '&type=' . rtrim($resource, 's');
-        $ovesio_resource = $resource;
-        $ovesio_route    = $controller_name;
-
-        $buttons = [];
         $text_generate_content = $this->l('text_generate_content_with_ovesio');
         $text_generate_seo     = $this->l('text_generate_seo_with_ovesio');
         $text_translate        = $this->l('text_translate_with_ovesio');
 
+        $controller_name = \Context::getContext()->controller->controller_name;
+
+        if (isset($ovesio_route_resource[$controller_name])) {
+            $resource = $ovesio_route_resource[$controller_name];
+
+            $ovesio_generate_content_status = $ovesio_status && $ovesio_generate_content_status && in_array($resource, ['products', 'categories']);
+            $ovesio_generate_seo_status     = $ovesio_status && $ovesio_generate_seo_status && in_array($resource, ['products', 'categories']);
+            $ovesio_translate_status        = $ovesio_status && $ovesio_translate_status;
+
+            $ovesio_manual_url = $this->context->link->getAdminLink(ManualController::TAB_CLASS_NAME) . '&type=' . rtrim($resource, 's');
+            $ovesio_resource = $resource;
+            $ovesio_route    = $controller_name;
+        } else {
+            return '';
+        }
+
+        // Check which page we're on and add appropriate buttons
+        $buttons = '';
+
         if (!empty($ovesio_generate_content_status)) {
-            $buttons[] = [
-                'label'   => $text_generate_content,
-                'onclick' => 'ovesio.generateContent(event)',
-                'style'   => 'background: #0dcaf0; color: white; font-weight: bold;',
-                'data'    => [
-                    'resource' => $ovesio_resource,
-                    'route'    => $ovesio_route,
-                    'href'     => $ovesio_manual_url
-                ]
-            ];
+            $buttons .= '<button type="button" class="btn" data-resource="' . $ovesio_resource . '" data-route="' . $ovesio_route . '" data-href="' . $ovesio_manual_url . '" style="background: #0dcaf0; color: white; font-weight: bold;" onclick="ovesio.generateContent(event)">' . $text_generate_content . '</button>&nbsp;';
         }
 
         if (!empty($ovesio_generate_seo_status)) {
-            $buttons[] = [
-                'label'   => $text_generate_seo,
-                'onclick' => 'ovesio.generateSeo(event)',
-                'style'   => 'background: #ffc107; color: white; font-weight: bold;',
-                'data'    => [
-                    'resource' => $ovesio_resource,
-                    'route'    => $ovesio_route,
-                    'href'     => $ovesio_manual_url
-                ]
-            ];
+            $buttons .= '<button type="button" class="btn" data-resource="' . $ovesio_resource . '" data-route="' . $ovesio_route . '" data-href="' . $ovesio_manual_url . '" style="background: #ffc107; color: white; font-weight: bold;" onclick="ovesio.generateSeo(event)">' . $text_generate_seo . '</button>&nbsp;';
         }
 
         if (!empty($ovesio_translate_status)) {
-            $buttons[] = [
-                'label'   => $text_translate,
-                'onclick' => 'ovesio.translate(event)',
-                'style'   => 'background: #198754; color: white; font-weight: bold;',
-                'data'    => [
-                    'resource' => $ovesio_resource,
-                    'route'    => $ovesio_route,
-                    'href'     => $ovesio_manual_url
-                ]
-            ];
+            $buttons .= '<button type="button" class="btn" data-resource="' . $ovesio_resource . '" data-route="' . $ovesio_route . '" data-href="' . $ovesio_manual_url . '" style="background: #198754; color: white; font-weight: bold;" onclick="ovesio.translate(event)">' . $text_translate . '</button>&nbsp;';
         }
 
         return $buttons;
-    }
-
-    /**
-     * Hook to add custom buttons in the admin toolbar
-     * This hook is called in the toolbar area on various admin pages
-     */
-    public function hookDisplayDashboardToolbarTopMenu($params)
-    {
-        $buttons_data = $this->getToolbarButtons();
-        $output = '';
-
-        foreach ($buttons_data as $btn) {
-            $data_attrs = '';
-            foreach ($btn['data'] as $key => $val) {
-                $data_attrs .= ' data-' . $key . '="' . $val . '"';
-            }
-            $output .= '<button type="button" class="btn ovesio-toolbar-btn" ' . $data_attrs . ' style="' . $btn['style'] . '" onclick="' . $btn['onclick'] . '">' . $btn['label'] . '</button>&nbsp;';
-        }
-
-        return $output;
     }
 
     /**
@@ -387,11 +339,6 @@ class Ovesio extends Module
 
             $this->context->controller->addCss($this->_path . 'views/css/ovesio.css');
             $this->context->controller->addJS($this->_path . 'views/js/ovesio.js');
-
-            // Pass toolbar buttons to JS for Symfony pages support
-            \Media::addJsDef([
-                'ovesio_toolbar_buttons' => $this->getToolbarButtons()
-            ]);
         }
     }
 

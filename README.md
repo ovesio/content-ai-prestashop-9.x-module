@@ -40,7 +40,7 @@ The Ovesio - Content AI Module integrates PrestaShop with [Ovesio.com](https://o
 
 ### SEO Meta Tag Generation
 
-- Fully automated generation of SEO meta titles, meta descriptions, and meta keywords using Ovesio AI
+- Fully automated generation of SEO meta titles, meta descriptions, and meta keywords using Ovesio - Content AI
 - Configurable from the AI SEO MetaTags Generator section
 - Available for both products and categories
 - SEO meta tag generation supports:
