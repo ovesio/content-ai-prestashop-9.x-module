@@ -86,6 +86,7 @@ From the AI Description Generator section:
     *   Click the **Upload a module** button.
     *   Select or drag & drop the downloaded zip archive.
     *   Click the **Install** button.
+    *   **Important:** Before configuring the module, ensure you have installed the required language packs in **International** > **Localization** > **Import a localization pack**. Ovesio translates store content, but system files must be installed via these packs. These languages will then be available for configuration in the Translate Settings tab.
     *   After installation, click the **Configure** button.
 
 ### Step 2: Configure the Module
@@ -161,14 +162,38 @@ The module registers the following PrestaShop hooks:
 - `actionObjectAttributeGroupUpdateAfter` - Triggered after attribute group update
 - `actionObjectProductAttributeAddAfter` - Triggered after combination add
 - `actionObjectProductAttributeUpdateAfter` - Triggered after combination update
-- `displayDashboardToolbarTopMenu` - Dashboard integration
-- `actionAdminControllerSetMedia` - Admin assets loading
+- `actionProductGridDefinitionModifier` - Adds Ovesio bulk actions to the Products grid
+- `actionCategoryGridDefinitionModifier` - Adds Ovesio bulk actions to the Categories grid
+- `actionAttributeGroupGridDefinitionModifier` - Adds Ovesio bulk actions to the Attributes grid
+- `actionFeatureGridDefinitionModifier` - Adds Ovesio bulk actions to the Features grid
+
+## Manual Processing with Bulk Actions
+
+In addition to automatic processing via cron, you can manually send entries to Ovesio using the **Bulk Actions** feature available in PrestaShop's admin grids.
+
+### How to use
+
+1. Navigate to one of the supported sections in the admin panel:
+   - **Catalog > Products**
+   - **Catalog > Categories**
+   - **Catalog > Attributes & Features > Attributes**
+   - **Catalog > Attributes & Features > Features**
+2. Select one or more entries using the checkboxes on the left side of the grid.
+3. Click the **Bulk actions** dropdown button.
+4. Choose one of the available Ovesio actions:
+   - **Generate Content with Ovesio** — Generates AI descriptions (available for Products and Categories)
+   - **Generate SEO with Ovesio** — Generates AI meta titles, descriptions, and keywords (available for Products and Categories)
+   - **Translate with Ovesio** — Translates the selected entries into the configured languages (available for all sections)
+5. The selected entries will be queued for processing. You will see a confirmation message and can monitor the progress in the **Activity List** page.
+
+> **Note:** The available bulk actions depend on which features are enabled in the module configuration. If a feature (e.g., Generate Content) is disabled, the corresponding bulk action will not appear in the dropdown.
 
 ## Usage Summary
 
 - Descriptions, meta tags, and translations are executed asynchronously in the background
 - Operations can be triggered once or on every update, based on configuration
 - Translations are processed once unless content is modified
+- Use the **Bulk Actions** in Products, Categories, Attributes, and Features grids to manually send entries for processing
 - Use the activity list to monitor processing status and errors
 - Ensure cron is set up for full automation
 
