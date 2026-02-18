@@ -126,6 +126,8 @@ class OvesioModel
 
             Configuration::updateValue($key, $value);
         }
+
+        return true;
     }
 
     public function uninstall()

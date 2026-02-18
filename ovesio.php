@@ -9,6 +9,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use Ovesio\OvesioAI;
 use Ovesio\QueueHandler;
 use PrestaShop\Module\Ovesio\Controller\Admin\ConfigureController;
+use PrestaShop\Module\Ovesio\Controller\Admin\ActivityListController;
 use PrestaShop\Module\Ovesio\Controller\Admin\ManualController;
 use PrestaShop\Module\Ovesio\Support\OvesioConfiguration;
 use PrestaShop\Module\Ovesio\Support\OvesioLog;
@@ -36,18 +37,28 @@ class Ovesio extends Module
         $this->loadKeyValueLanguages();
 
         // Define tabs
-        $tabNames = [];
+        //$tabNames = [];
+        $tabNamesActivityList = [];
         foreach (Language::getLanguages(true) as $lang) {
-            $tabNames[$lang['locale']] = $this->l('Ovesio - Content AI');
+            //$tabNames[$lang['locale']] = $this->l('Ovesio - Content AI');
+            $tabNamesActivityList[$lang['locale']] = $this->l('Ovesio - Activity List');
         }
 
         $this->tabs = [
+            // [
+            //     'route_name' => 'admin_ovesio_configure',
+            //     'class_name' => ConfigureController::TAB_CLASS_NAME,
+            //     'visible' => true,
+            //     'name' => $tabNames,
+            //     'icon' => 'science',
+            //     'parent_class_name' => 'AdminCatalog',
+            // ],
             [
-                'route_name' => 'admin_ovesio_configure',
-                'class_name' => ConfigureController::TAB_CLASS_NAME,
+                'route_name' => 'admin_ovesio_activity_list',
+                'class_name' => ActivityListController::TAB_CLASS_NAME,
                 'visible' => true,
-                'name' => $tabNames,
-                'icon' => 'science',
+                'name' => $tabNamesActivityList,
+                'icon' => 'list',
                 'parent_class_name' => 'AdminCatalog',
             ],
         ];
@@ -103,8 +114,10 @@ class Ovesio extends Module
             $this->registerHook('actionObjectAttributeGroupUpdateAfter') &&
             $this->registerHook('actionObjectProductAttributeAddAfter') &&
             $this->registerHook('actionObjectProductAttributeUpdateAfter') &&
-            $this->registerHook('displayDashboardToolbarTopMenu') &&
-            $this->registerHook('actionAdminControllerSetMedia');
+            $this->registerHook('actionProductGridDefinitionModifier') &&
+            $this->registerHook('actionCategoryGridDefinitionModifier') &&
+            $this->registerHook('actionAttributeGroupGridDefinitionModifier') &&
+            $this->registerHook('actionFeatureGridDefinitionModifier');
     }
 
     public function hookModuleRoutes()
@@ -259,86 +272,88 @@ class Ovesio extends Module
     }
 
     /**
-     * Hook to add custom buttons in the admin toolbar
-     * This hook is called in the toolbar area on various admin pages
+     * Hook to modify the Product grid definition - add Ovesio bulk actions
      */
-    public function hookDisplayDashboardToolbarTopMenu($params)
+    public function hookActionProductGridDefinitionModifier($params)
     {
-        $action = Tools::getValue('action');
-        if ($action && stripos($action, 'view') === false) {
+        $this->addOvesioBulkActions($params['definition'], 'product');
+    }
+
+    /**
+     * Hook to modify the Category grid definition - add Ovesio bulk actions
+     */
+    public function hookActionCategoryGridDefinitionModifier($params)
+    {
+        $this->addOvesioBulkActions($params['definition'], 'category');
+    }
+
+    /**
+     * Hook to modify the Attribute Group grid definition - add Ovesio bulk actions
+     */
+    public function hookActionAttributeGroupGridDefinitionModifier($params)
+    {
+        $this->addOvesioBulkActions($params['definition'], 'attribute');
+    }
+
+    /**
+     * Hook to modify the Feature grid definition - add Ovesio bulk actions
+     */
+    public function hookActionFeatureGridDefinitionModifier($params)
+    {
+        $this->addOvesioBulkActions($params['definition'], 'feature');
+    }
+
+    /**
+     * Add Ovesio bulk actions (Generate Content, Generate SEO, Translate) to a grid definition
+     *
+     * @param \PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinition $definition
+     * @param string $resourceType product|category|attribute|feature
+     */
+    private function addOvesioBulkActions($definition, $resourceType)
+    {
+        $ovesio_status = \Configuration::get('OVESIO_STATUS');
+        if (!$ovesio_status) {
             return;
         }
 
-        $ovesio_status                  = \Configuration::get('OVESIO_STATUS');
         $ovesio_generate_content_status = \Configuration::get('OVESIO_GENERATE_CONTENT_STATUS');
         $ovesio_generate_seo_status     = \Configuration::get('OVESIO_GENERATE_SEO_STATUS');
         $ovesio_translate_status        = \Configuration::get('OVESIO_TRANSLATE_STATUS');
 
-        $ovesio_route_resource = [
-            'AdminProducts'         => 'products',
-            'AdminCategories'       => 'categories',
-            'AdminAttributesGroups' => 'attributes',
-            'AdminFeatures'         => 'features',
-        ];
-
-        $text_generate_content = $this->l('text_generate_content_with_ovesio');
-        $text_generate_seo     = $this->l('text_generate_seo_with_ovesio');
-        $text_translate        = $this->l('text_translate_with_ovesio');
-
-        $controller_name = \Context::getContext()->controller->controller_name;
-
-        if (isset($ovesio_route_resource[$controller_name])) {
-            $resource = $ovesio_route_resource[$controller_name];
-
-            $ovesio_generate_content_status = $ovesio_status && $ovesio_generate_content_status && in_array($resource, ['products', 'categories']);
-            $ovesio_generate_seo_status     = $ovesio_status && $ovesio_generate_seo_status && in_array($resource, ['products', 'categories']);
-            $ovesio_translate_status        = $ovesio_status && $ovesio_translate_status;
-
-            $ovesio_manual_url = $this->context->link->getAdminLink(ManualController::TAB_CLASS_NAME) . '&type=' . rtrim($resource, 's');
-            $ovesio_resource = $resource;
-            $ovesio_route    = $controller_name;
-        } else {
-            return '';
+        // Generate Content is only for products and categories
+        if ($ovesio_generate_content_status && in_array($resourceType, ['product', 'category'])) {
+            $definition->getBulkActions()->add(
+                (new \PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction('ovesio_generate_content'))
+                    ->setName($this->l('text_generate_content_with_ovesio'))
+                    ->setOptions([
+                        'submit_route' => 'admin_ovesio_bulk_generate_content',
+                        'route_params' => ['resource_type' => $resourceType],
+                    ])
+            );
         }
 
-        // Check which page we're on and add appropriate buttons
-        $buttons = '';
-
-        if (!empty($ovesio_generate_content_status)) {
-            $buttons .= '<button type="button" class="btn" data-resource="' . $ovesio_resource . '" data-route="' . $ovesio_route . '" data-href="' . $ovesio_manual_url . '" style="background: #0dcaf0; color: white; font-weight: bold;" onclick="ovesio.generateContent(event)">' . $text_generate_content . '</button>&nbsp;';
+        // Generate SEO is only for products and categories
+        if ($ovesio_generate_seo_status && in_array($resourceType, ['product', 'category'])) {
+            $definition->getBulkActions()->add(
+                (new \PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction('ovesio_generate_seo'))
+                    ->setName($this->l('text_generate_seo_with_ovesio'))
+                    ->setOptions([
+                        'submit_route' => 'admin_ovesio_bulk_generate_seo',
+                        'route_params' => ['resource_type' => $resourceType],
+                    ])
+            );
         }
 
-        if (!empty($ovesio_generate_seo_status)) {
-            $buttons .= '<button type="button" class="btn" data-resource="' . $ovesio_resource . '" data-route="' . $ovesio_route . '" data-href="' . $ovesio_manual_url . '" style="background: #ffc107; color: white; font-weight: bold;" onclick="ovesio.generateSeo(event)">' . $text_generate_seo . '</button>&nbsp;';
-        }
-
-        if (!empty($ovesio_translate_status)) {
-            $buttons .= '<button type="button" class="btn" data-resource="' . $ovesio_resource . '" data-route="' . $ovesio_route . '" data-href="' . $ovesio_manual_url . '" style="background: #198754; color: white; font-weight: bold;" onclick="ovesio.translate(event)">' . $text_translate . '</button>&nbsp;';
-        }
-
-        return $buttons;
-    }
-
-    /**
-     * Hook to add CSS/JS in admin pages
-     */
-    public function hookActionAdminControllerSetMedia($params)
-    {
-        $action = Tools::getValue('action');
-        if ($action && stripos($action, 'view') === false) {
-            return;
-        }
-
-        $controllerName = \Context::getContext()->controller->controller_name;
-
-        // Add CSS/JS only on relevant pages
-        if (strpos($controllerName, 'AdminProducts') !== false ||
-            strpos($controllerName, 'AdminCategories') !== false ||
-            strpos($controllerName, 'AdminFeatures') !== false ||
-            strpos($controllerName, 'AdminAttributesGroups') !== false) {
-
-            $this->context->controller->addCss($this->_path . 'views/css/ovesio.css');
-            $this->context->controller->addJS($this->_path . 'views/js/ovesio.js');
+        // Translate is available for all resource types
+        if ($ovesio_translate_status) {
+            $definition->getBulkActions()->add(
+                (new \PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction('ovesio_translate'))
+                    ->setName($this->l('text_translate_with_ovesio'))
+                    ->setOptions([
+                        'submit_route' => 'admin_ovesio_bulk_translate',
+                        'route_params' => ['resource_type' => $resourceType],
+                    ])
+            );
         }
     }
 

@@ -14,6 +14,33 @@ admin_ovesio_manual:
         _legacy_controller: AdminOvesioManual
         _legacy_link: AdminOvesioManual
 
+admin_ovesio_bulk_generate_content:
+    path: /ovesio/bulk/generate-content/{resource_type}
+    methods: [POST]
+    defaults:
+        _controller: PrestaShop\Module\Ovesio\Controller\Admin\ManualController::bulkAction
+        activity_type: generate_content
+    requirements:
+        resource_type: product|category|attribute|feature
+
+admin_ovesio_bulk_generate_seo:
+    path: /ovesio/bulk/generate-seo/{resource_type}
+    methods: [POST]
+    defaults:
+        _controller: PrestaShop\Module\Ovesio\Controller\Admin\ManualController::bulkAction
+        activity_type: generate_seo
+    requirements:
+        resource_type: product|category|attribute|feature
+
+admin_ovesio_bulk_translate:
+    path: /ovesio/bulk/translate/{resource_type}
+    methods: [POST]
+    defaults:
+        _controller: PrestaShop\Module\Ovesio\Controller\Admin\ManualController::bulkAction
+        activity_type: translate
+    requirements:
+        resource_type: product|category|attribute|feature
+
 admin_ovesio_connect:
     path: /ovesio/connect
     methods: [POST]
