@@ -22,7 +22,7 @@ class Ovesio extends Module
     {
         $this->name = 'ovesio';
         $this->tab = 'administration';
-        $this->version = '1.2';
+        $this->version = '1.2.0';
         $this->author = 'Aweb Design';
         $this->need_instance = 0;
         $this->bootstrap = true;

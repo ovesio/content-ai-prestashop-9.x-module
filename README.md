@@ -249,7 +249,7 @@ ovesio/
 
 ## Version
 
-Current version: 1.2
+Current version: 1.2.0
 
 ## Support
 
