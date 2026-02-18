@@ -311,11 +311,16 @@ fieldset.ov-fieldset > legend {
   box-shadow: 0 0 0 0.2em rgba(13, 110, 253, 0.25);
 }
 
-.ov-form-control:disabled,
-.ov-form-control[readonly] {
+.ov-form-control:disabled {
   background-color: #e9ecef;
   opacity: 1;
   cursor: not-allowed;
+}
+
+.ov-form-control[readonly] {
+  background-color: #f8f9fa;
+  opacity: 1;
+  cursor: default;
 }
 
 .ov-form-control::placeholder {
